@@ -1,13 +1,7 @@
 export default function calenderFormat(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+    let splitTime = date.split("T");
 
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
+    let splitDate = splitTime[0].split("-");
 
-    return [year, month, day].join('-');
+    return splitDate[0] + "-" + splitDate[1] + "-" + splitDate[2]
 }

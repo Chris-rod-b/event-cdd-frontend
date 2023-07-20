@@ -49,7 +49,8 @@ const Button = styled.button`
 const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const ref = useRef();
     
-    const [dataInicio, setDataInicio] = useState();
+    const [dataInicio, setDataInicio] = useState('');
+    const [dataTermino, setDataTermino] = useState('');
     
     useEffect(() => {
         if (onEdit) {
@@ -87,7 +88,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
                 startedDate: event.data_inicio.value,
                 endedDate: event.data_termino.value,
                 concluded: event.concluido.checked,
-            }).then(({ data }) => toast.success(data))
+            }).then(() => toast.success("Edição realizada com sucesso!"))
             .catch(({ data }) => toast.error(data));
         } else {
             await axios.post("http://localhost:3030/api/events/create", {
@@ -96,7 +97,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
                 startedDate: event.data_inicio.value,
                 endedDate: event.data_termino.value,
                 concluded: event.concluido.checked,
-            }).then(({ data }) => toast.success(data))
+            }).then(() => toast.success("Evento cadastrado com sucesso!"))
             .catch(({ data }) => toast.error(data));
         }
 
@@ -123,12 +124,16 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             <InputArea>
                 <Label>Data de Início</Label>
                 <Input className="date" name="data_inicio" 
-                    type="date" onChange={(e) => setDataInicio(e.target.value)}/>
+                    type="date" onChange={(e) => setDataInicio(e.target.value)}
+                    max={dataTermino}
+                />
             </InputArea>
             <InputArea>
                 <Label>Data de Término</Label>
                 <Input className="date" name="data_termino" 
-                    type="date" min={dataInicio} />
+                    type="date" onChange={(e) => setDataTermino(e.target.value)}
+                    min={dataInicio}     
+                />
             </InputArea>
             <InputArea>
                 <Label>Concluído</Label>

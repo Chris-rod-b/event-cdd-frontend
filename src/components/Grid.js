@@ -57,11 +57,11 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
 
     await axios
       .delete("http://localhost:3030/api/events/" + id)
-      .then(({ data }) => {
+      .then(() => {
          const newArray = events.filter((event) => event._id !== id);
 
         setEvents(newArray);
-        toast.success(data);
+        toast.success("Evento excluído com sucesso!");
       })
       .catch(({ data }) => toast.error(data));
 
