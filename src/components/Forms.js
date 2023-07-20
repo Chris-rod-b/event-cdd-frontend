@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -48,7 +48,9 @@ const Button = styled.button`
 
 const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const ref = useRef();
-
+    
+    const [dataInicio, setDataInicio] = useState();
+    
     useEffect(() => {
         if (onEdit) {
             const event = ref.current;
@@ -120,11 +122,13 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             </InputArea>
             <InputArea>
                 <Label>Data de Início</Label>
-                <Input className="date" name="data_inicio" type="date" />
+                <Input className="date" name="data_inicio" 
+                    type="date" onChange={(e) => setDataInicio(e.target.value)}/>
             </InputArea>
             <InputArea>
                 <Label>Data de Término</Label>
-                <Input className="date" name="data_termino" type="date" />
+                <Input className="date" name="data_termino" 
+                    type="date" min={dataInicio} />
             </InputArea>
             <InputArea>
                 <Label>Concluído</Label>
