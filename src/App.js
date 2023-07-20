@@ -34,7 +34,6 @@ const Button = styled.button`
 `;
 
 function App() {
-  const [showForms, setShowForms] = useState(false);
   const [events, setEvents] = useState([]);
   const [onEdit, setOnEdit] = useState(null);
 
@@ -62,12 +61,11 @@ function App() {
           />          
           Colo de Deus - Eventos
         </Title>
-        <Button type="submit" onClick={() => {setShowForms(!showForms)}}>
-          Novo evento
-        </Button>
-        {showForms && (
-          <Forms />
-        )}
+        <Forms 
+          onEdit={onEdit} 
+          setOnEdit={setOnEdit} 
+          getEvents={getEvents} 
+        />
         <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
       </Container>
       <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_LEFT} />
