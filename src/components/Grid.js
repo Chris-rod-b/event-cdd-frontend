@@ -84,8 +84,8 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
       <Tbody>
         {events.map((item, i) => (
           <Tr key={i}>
-            <Td width="20%">{item.name}</Td>
-            <Td width="30%" onlyWeb>{item.location}</Td>
+            <Td width="18%">{item.name}</Td>
+            <Td width="32%" onlyWeb>{item.location}</Td>
             <Td width="15%"> {formatter(item.startedDate)}</Td>
             <Td width="15%"> {formatter(item.endedDate)}</Td>
             <Td width="10%" alignCenter onlyWeb> {item.concluded ? "Sim" : "Não"} </Td>

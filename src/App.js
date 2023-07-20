@@ -56,6 +56,12 @@ function App() {
           setOnEdit={setOnEdit} 
           getEvents={getEvents} 
         />
+        <br/>
+        <div>
+          <h4>Total de eventos: {events.length}</h4>
+          <h4>A acontecer: {events.filter(e => !e.concluded).length}</h4>
+          <h4>Finzalidos: {events.filter(e => e.concluded).length}</h4>
+        </div>
         <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
       </Container>
       <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_LEFT} />
