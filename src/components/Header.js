@@ -5,18 +5,18 @@ const HeaderContent = styled.div`
     background-color: #3c4fb2;
     color: #FFFFFF;
     margin: 0;
-    padding: 0;
+    padding: 15px 0 0 0;
     width: 100%;
-    height: 300px;
+    height: 325px;
 `
 
-const Title = styled.div`
+const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     width: 1200px;
-    margin: auto;
+    margin: 20px auto;
 `;
 
 const Logo = styled.div`
@@ -42,10 +42,37 @@ const Image = styled.img`
     filter: invert();
 `
 
+const CountersWrapper = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 530px;
+`
+
+const Counters = styled.span`
+    font-size: 30px;
+    font-weight: bold;
+`
+
+const Button = styled.button`
+    background-color: #f6bf0c;
+    border: none;
+    color: white;
+    padding: 15px 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #ddac0b;
+    }
+`
+
 const Header = ({ events }) => {  
     return (
         <HeaderContent>
-            <Title>
+            <Wrapper>
                 <Logo>
                     <Image 
                         src="https://colodedeus.com.br/wp-content/uploads/2022/08/800px-ASSINATURA-LOGO-OFICIAL-1_LOGOTIPO.png" 
@@ -57,15 +84,24 @@ const Header = ({ events }) => {
                 </Logo>
 
                 <div></div>       
-            </Title>
+            </Wrapper>
             
             <Line />
 
-            <div display="block">
-                <h4>Total de eventos: {events.length}</h4>
-                <h4>A acontecer: {events.filter(e => !e.concluded).length}</h4>
-                <h4>Finzalidos: {events.filter(e => e.concluded).length}</h4>
-            </div>
+            <Wrapper>
+                <CountersWrapper>
+                    <div>
+                        <Counters>{events.length}</Counters><p>Eventos no total</p>
+                    </div>
+                    <div>
+                        <Counters>{events.filter(e => !e.concluded).length}</Counters><p>Eventos para acontecer</p>
+                    </div>
+                    <div>
+                        <Counters>{events.filter(e => e.concluded).length}</Counters><p>Eventos finzalidos</p>
+                    </div>
+                </CountersWrapper>
+                <Button>Novo evento</Button>
+            </Wrapper>
         </HeaderContent>
     );
   };
