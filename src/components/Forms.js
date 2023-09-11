@@ -13,6 +13,7 @@ const FormContainer = styled.form`
     padding: 20px;
     box-shadow: 0px 0px 5px #ccc;
     border-radius: 5px;
+    margin-top: -60px;
 `;
 
 const InputArea = styled.div`

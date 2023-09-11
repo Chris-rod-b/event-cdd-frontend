@@ -35,7 +35,7 @@ export const Th = styled.th`
 export const Td = styled.td`
   padding-top: 15px;
   padding-left: 5px;
-  text-align: ${(props) => (props.alignCenter ? "center" : "start")};
+  text-align: ${(props) => (props.aligncenter ? "center" : "start")};
   width: ${(props) => (props.width ? props.width : "auto")};
 
   &.fa {
@@ -88,11 +88,11 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
             <Td width="32%" onlyWeb>{item.location}</Td>
             <Td width="15%"> {formatter(item.startedDate)}</Td>
             <Td width="15%"> {formatter(item.endedDate)}</Td>
-            <Td width="10%" alignCenter onlyWeb> {item.concluded ? "Sim" : "Não"} </Td>
-            <Td className="fa" alignCenter width="5%">
+            <Td width="10%" aligncenter="true" onlyWeb> {item.concluded ? "Sim" : "Não"} </Td>
+            <Td className="fa" aligncenter="true" width="5%">
               <FaEdit onClick={() => handleEdit(item)} />
             </Td>
-            <Td className="fa" alignCenter width="5%">
+            <Td className="fa" aligncenter="true" width="5%">
               <FaTrash onClick={() => handleDelete(item._id)} />
             </Td>
           </Tr>
