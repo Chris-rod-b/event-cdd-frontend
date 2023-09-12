@@ -7,6 +7,7 @@ import Grid from "./components/Grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
+import { useEventContext } from "./context/EventContext";
 
 const Container = styled.div`
   width: 100%;
@@ -16,12 +17,19 @@ const Container = styled.div`
   gap: 10px;
 `;
 
-function App() {
+const Footer = styled.footer`
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+`
 
-  //Usar Context para todos os tipos de chamadas e variaveis aqui
+function App() {
 
   const [events, setEvents] = useState([]);
   const [onEdit, setOnEdit] = useState(null);
+
+  const { booleanState } = useEventContext();
 
   const getEvents = async () => {
     try {
@@ -31,14 +39,6 @@ function App() {
       toast.error(error);
     }
   };
-  
-  /**
-   * Trocar para:
-   * 
-   * useEffect(() => {
-   *  getEvents();
-   * }, []);
-   */
 
   useEffect(() => {
     getEvents();
@@ -47,13 +47,19 @@ function App() {
   return (
     <>
       <Container>
-          <Header events={events}/>
-          <Forms 
-            onEdit={onEdit} 
-            setOnEdit={setOnEdit} 
-            getEvents={getEvents} 
-          />
-          <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
+        <Header events={events}/>
+        {
+          booleanState && 
+            <Forms 
+              onEdit={onEdit} 
+              setOnEdit={setOnEdit} 
+              getEvents={getEvents} 
+            />
+        }
+        <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
+        <Footer>
+          Copyright © 2023 – Comunidade Católica Colo de Deus | Todos os direitos reservados.
+        </Footer>
       </Container>
       <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_LEFT} />
       <GlobalStyles />

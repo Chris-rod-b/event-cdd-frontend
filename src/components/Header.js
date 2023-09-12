@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useEventContext } from "../context/EventContext";
 
 const HeaderContent = styled.div`
     background-color: #3c4fb2;
@@ -70,6 +71,9 @@ const Button = styled.button`
 `
 
 const Header = ({ events }) => {  
+    
+    const { toggleBoolean } = useEventContext();
+
     return (
         <HeaderContent>
             <Wrapper>
@@ -100,7 +104,7 @@ const Header = ({ events }) => {
                         <Counters>{events.filter(e => e.concluded).length}</Counters><p>Eventos finzalidos</p>
                     </div>
                 </CountersWrapper>
-                <Button>Novo evento</Button>
+                <Button onClick={toggleBoolean}>Novo evento</Button>
             </Wrapper>
         </HeaderContent>
     );

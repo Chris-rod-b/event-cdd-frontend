@@ -4,32 +4,29 @@ import styled from "styled-components";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import formatter from "../util/formatter";
+import { useEventContext } from "../context/EventContext";
 
-const Table = styled.table`
+const EventContent = styled.div`
   width: 100%;
   background-color: #fff;
   padding: 20px;
-  box-shadow: 0px 0px 5px #ccc;
+  box-shadow: 0px 0px 5px #ccc4;
   border-radius: 5px;
-  max-width: 1120px;
-  margin: 20px auto;
-  word-break: break-all;
+  max-width: 1200px;
+  margin: 5px auto;
 `;
 
-export const Thead = styled.thead``;
-
-export const Tbody = styled.tbody``;
-
-export const Tr = styled.tr``;
-
-export const Th = styled.th`
-  text-align: start;
-  border-bottom: inset;
-  padding-bottom: 5px;
-
-  @media (max-width: 500px) {
-    ${(props) => props.onlyWeb && "display: none"}
-  }
+const Content = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  align-items: flex-end;
+  gap: 15px;
+  flex-wrap: wrap;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 0px 5px #ccc4;
+  border-radius: 5px;
 `;
 
 export const Td = styled.td`
@@ -49,8 +46,11 @@ export const Td = styled.td`
 
 const Grid = ({ events, setEvents, setOnEdit }) => {
   
+  const { setBooleanState } = useEventContext();
+  
   const handleEdit = (item) => {
     setOnEdit(item);
+    setBooleanState(true);
   };
 
   const handleDelete = async (id) => {
@@ -69,21 +69,13 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
   };
   
   return (
-    <Table>
-      <Thead>
-        <Tr>
-          <Th>Nome Evento</Th>
-          <Th onlyWeb>Localização</Th>
-          <Th>Data Início</Th>
-          <Th>Data Término</Th>
-          <Th onlyWeb>Concluído</Th>
-          <Th></Th>
-          <Th></Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {events.map((item, i) => (
-          <Tr key={i}>
+    <>
+      {events.map((item, i) => (
+        <EventContent key={i}>
+          {
+            item.name
+          }
+          { /* 
             <Td width="18%">{item.name}</Td>
             <Td width="32%" onlyWeb>{item.location}</Td>
             <Td width="15%"> {formatter(item.startedDate)}</Td>
@@ -95,10 +87,10 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
             <Td className="fa" aligncenter="true" width="5%">
               <FaTrash onClick={() => handleDelete(item._id)} />
             </Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+          */ }
+        </EventContent>
+      ))}
+    </>
   );
 };
 

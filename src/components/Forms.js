@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import axios from "axios";
 import calenderFormat from "../util/calenderFormat";
+import { useEventContext } from "../context/EventContext";
 
 const FormContainer = styled.form`
     display: flex;
@@ -11,7 +12,7 @@ const FormContainer = styled.form`
     flex-wrap: wrap;
     background-color: #fff;
     padding: 20px;
-    box-shadow: 0px 0px 5px #ccc;
+    box-shadow: 0px 0px 5px #ccc4;
     border-radius: 5px;
     margin-top: -60px;
 `;
@@ -26,8 +27,14 @@ const Input = styled.input`
         width: 135px;    
     }
     &.checkbox {
-        width: 50px;    
+        width: 20px;
+        margin: auto;
     }
+
+    &.localizacao {
+        width: 300px;
+    }
+
     width: 200px;
     padding: 0 10px;
     border: 1px solid #bbb;
@@ -38,13 +45,16 @@ const Input = styled.input`
 const Label = styled.label``;
 
 const Button = styled.button`
-    padding: 10px;
+    padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
     border: none;
     background-color: #2c73d2;
     color: white;
     height: 42px;
+    font-weight: bold;
+    font-size: 15px;
+    margin-left: 25px;
 `;
 
 const Form = ({ getEvents, onEdit, setOnEdit }) => {
@@ -53,6 +63,8 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const [dataInicio, setDataInicio] = useState('');
     const [dataTermino, setDataTermino] = useState('');
     
+    const { toggleBoolean } = useEventContext();
+
     useEffect(() => {
         if (onEdit) {
             const event = ref.current;
@@ -109,6 +121,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         event.concluido.checked = false;
 
         setOnEdit(null);
+        toggleBoolean();
         getEvents();
     }
 
@@ -120,7 +133,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             </InputArea>
             <InputArea>
                 <Label>Localização</Label>
-                <Input name="localizacao" />
+                <Input className="localizacao" name="localizacao" />
             </InputArea>
             <InputArea>
                 <Label>Data de Início</Label>
