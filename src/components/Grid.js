@@ -9,38 +9,50 @@ import { useEventContext } from "../context/EventContext";
 const EventContent = styled.div`
   width: 100%;
   background-color: #fff;
-  padding: 20px;
+  padding: 20px 40px;
   box-shadow: 0px 0px 5px #ccc4;
   border-radius: 5px;
   max-width: 1200px;
-  margin: 5px auto;
-`;
-
-const Content = styled.div`
+  margin: 5px auto 15px auto;
   display: flex;
-  width: 100%;
-  max-width: 1200px;
-  align-items: flex-end;
-  gap: 15px;
-  flex-wrap: wrap;
-  background-color: #fff;
-  padding: 20px;
-  box-shadow: 0px 0px 5px #ccc4;
-  border-radius: 5px;
+  justify-content: space-between;
 `;
 
-export const Td = styled.td`
-  padding-top: 15px;
-  padding-left: 5px;
-  text-align: ${(props) => (props.aligncenter ? "center" : "start")};
-  width: ${(props) => (props.width ? props.width : "auto")};
+const WrapperContent = styled.div`
+  flex: 1;
 
-  &.fa {
-    cursor: pointer;
+  &.col:nth-child(1) {
+    flex-basis: 50%;
   }
+  &.col:nth-child(2) {
+    flex-basis: 25%;
+  }
+  &.col:nth-child(3) {
+    flex-basis: 20%;
+  }
+  &.col:nth-child(4) {
+    flex-basis: 5%;
+  }
+`;
 
-  @media (max-width: 500px) {
-    ${(props) => props.onlyWeb && "display: none"}
+const Title = styled.div`
+  font-size: 23px;
+  font-weight: bold;
+
+  &.secondTitle {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+`;
+
+const SubTitle = styled.div`
+  color: #555968;
+`;
+
+const Fa = styled.div`
+  cursor: pointer;
+  &.fa:first-child {
+    margin-bottom: 12px;
   }
 `;
 
@@ -72,9 +84,29 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
     <>
       {events.map((item, i) => (
         <EventContent key={i}>
-          {
-            item.name
-          }
+          <WrapperContent className="col">
+            <Title>{item.name}</Title>
+            <SubTitle>{item.location}</SubTitle>
+          </WrapperContent>
+            
+          <WrapperContent className="col">
+            <Title className="secondTitle">DATA</Title>
+            <SubTitle>{formatter(item.startedDate)} - {formatter(item.endedDate)}</SubTitle>
+          </WrapperContent>
+
+          <WrapperContent className="col">
+            <Title className="secondTitle">CONCLUÍDO</Title>
+            <SubTitle>{item.concluded ? "Sim" : "Não"}</SubTitle>
+          </WrapperContent>
+
+          <WrapperContent className="col">
+            <Fa className="fa">
+              <FaEdit onClick={() => handleEdit(item)} />
+            </Fa>
+            <Fa className="fa">
+              <FaTrash onClick={() => handleDelete(item._id)} />
+            </Fa>
+          </WrapperContent>
           { /* 
             <Td width="18%">{item.name}</Td>
             <Td width="32%" onlyWeb>{item.location}</Td>

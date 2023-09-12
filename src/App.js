@@ -17,6 +17,11 @@ const Container = styled.div`
   gap: 10px;
 `;
 
+const Grouper = styled.div`
+  width: 100%;
+  margin-top: -60px;
+`
+
 const Footer = styled.footer`
   height: 100px;
   display: flex;
@@ -48,15 +53,17 @@ function App() {
     <>
       <Container>
         <Header events={events}/>
-        {
-          booleanState && 
-            <Forms 
-              onEdit={onEdit} 
-              setOnEdit={setOnEdit} 
-              getEvents={getEvents} 
-            />
-        }
-        <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
+          <Grouper>
+            {
+              booleanState && 
+                <Forms 
+                  onEdit={onEdit} 
+                  setOnEdit={setOnEdit} 
+                  getEvents={getEvents} 
+                />
+            }
+            <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
+          </Grouper>
         <Footer>
           Copyright © 2023 – Comunidade Católica Colo de Deus | Todos os direitos reservados.
         </Footer>

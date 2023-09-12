@@ -50,7 +50,7 @@ const CountersWrapper = styled.div`
 `
 
 const Counters = styled.span`
-    font-size: 30px;
+    font-size: 35px;
     font-weight: bold;
 `
 

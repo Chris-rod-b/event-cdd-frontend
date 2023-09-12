@@ -7,14 +7,17 @@ import { useEventContext } from "../context/EventContext";
 
 const FormContainer = styled.form`
     display: flex;
-    align-items: flex-end;
+    max-width: 1100px;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
     flex-wrap: wrap;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0px 0px 5px #ccc4;
     border-radius: 5px;
-    margin-top: -60px;
+    margin: auto;
+    margin-bottom: 25px;
 `;
 
 const InputArea = styled.div`
@@ -49,12 +52,12 @@ const Button = styled.button`
     cursor: pointer;
     border-radius: 5px;
     border: none;
-    background-color: #2c73d2;
+    background-color: #f6bf0c;
     color: white;
     height: 42px;
     font-weight: bold;
     font-size: 15px;
-    margin-left: 25px;
+    margin-left: 10px;
 `;
 
 const Form = ({ getEvents, onEdit, setOnEdit }) => {
