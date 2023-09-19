@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { FaUpload } from "react-icons/fa";
 import axios from "axios";
 import calenderFormat from "../util/calenderFormat";
 import { useEventContext } from "../context/EventContext";
@@ -27,15 +28,22 @@ const InputArea = styled.div`
 
 const Input = styled.input`
     &.date {
-        width: 135px;    
+        width: 135px;
+        cursor: pointer;
     }
+
     &.checkbox {
         width: 20px;
         margin: auto;
+        cursor: pointer;
     }
 
     &.localizacao {
         width: 300px;
+    }
+
+    &.banner {
+        display: none;
     }
 
     width: 200px;
@@ -58,13 +66,51 @@ const Button = styled.button`
     font-weight: bold;
     font-size: 15px;
     margin-left: 10px;
+
+    &.banner {
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        background-color: transparent;
+        border: 1px solid #bbb;
+        color: #8a898d;
+        font-weight: lighter;
+        max-width: 100%;
+        width: 460px;
+        height: 120px;
+        transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+
+        &:hover {
+            color: #4c4c4f;
+            background-color: #ccc;
+        }
+
+        &:active {
+            color: black;
+            background-color: #f6bf0c;
+        }
+    }
 `;
+
+const ImagePreview = styled.img`
+    border-radius: 5px;
+    width: 460px;
+    height: 120px;
+    object-fit: cover;
+    object-position: 25% 25%;
+    background-repeat: no-repeat;
+    background-size: 100%;
+`
 
 const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const ref = useRef();
+    const hiddenFileInput = useRef(null);
     
     const [dataInicio, setDataInicio] = useState('');
     const [dataTermino, setDataTermino] = useState('');
+    const [banner, setBanner] = useState(null);
     
     const { toggleBoolean } = useEventContext();
 
@@ -128,6 +174,10 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         getEvents();
     }
 
+    const handleUploadBanner = (e) => {
+        hiddenFileInput.current.click(); 
+    }
+
     return (
         <FormContainer ref={ref} onSubmit={handleSubmit}>
             <InputArea>
@@ -155,6 +205,27 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             <InputArea>
                 <Label>Concluído</Label>
                 <Input className="checkbox" name="concluido" type="checkbox" />
+            </InputArea>
+            <InputArea>
+                <Button type="button" className="banner" onClick={handleUploadBanner}>
+                    {
+                        banner ?
+                            <ImagePreview src={URL.createObjectURL(banner)} alt={banner?.name} /> 
+                        :
+                            <>
+                                <FaUpload/> Carregue um banner
+                            </>   
+                    } 
+                </Button>
+                <Input 
+                    type='file' 
+                    className='banner' 
+                    accept="image/*" 
+                    ref={hiddenFileInput} 
+                    onChange={(event) => {
+                        setBanner(event.target.files[0]);
+                    }}
+                />
             </InputArea>
             <Button type="submit">Salvar</Button>
         </FormContainer>
