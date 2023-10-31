@@ -123,6 +123,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             event.data_inicio.value = calenderFormat(onEdit.startedDate);
             event.data_termino.value = calenderFormat(onEdit.endedDate);
             event.concluido.checked = onEdit.concluded;
+            event.banner.files = onEdit.banner;
         }
     }, [onEdit]);
 
@@ -130,37 +131,70 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         e.preventDefault();
 
         const event = ref.current;
-        
+
         if (
             !event.nome.value ||
             !event.localizacao.value ||
             !event.data_inicio.value ||
-            !event.data_termino.value 
+            !event.data_termino.value
         ) {
             return toast.warn("Preencha todos os campos!");
         }
 
         if (onEdit) {
-            console.log(event.data_inicio.value);
-            console.log(event.data_termino.value);
 
-            await axios.put("http://localhost:3030/api/events/" + onEdit._id, {
-                name: event.nome.value,
-                location: event.localizacao.value,
-                startedDate: event.data_inicio.value,
-                endedDate: event.data_termino.value,
-                concluded: event.concluido.checked,
-            }).then(() => toast.success("Edição realizada com sucesso!"))
-            .catch(({ data }) => toast.error(data));
+            let banner = event.banner.files[0];
+            
+            if (banner) {
+
+              let data = new FormData();
+              data.append('name', event.nome.value);
+              data.append('location', event.localizacao.value);
+              data.append('startedDate', event.data_inicio.value);
+              data.append('endedDate', event.data_termino.value);
+              data.append('concluded', event.concluido.checked);
+              data.append('banner', banner);
+              await axios.put("http://localhost:3030/api/events/" + onEdit._id, data)
+                .then(() => toast.success("Edição realizada com sucesso!"))
+                .catch(({ data }) => toast.error(data));
+
+            } else {
+                await axios.put("http://localhost:3030/api/events/" + onEdit._id, {
+                    name: event.nome.value,
+                    location: event.localizacao.value,
+                    startedDate: event.data_inicio.value,
+                    endedDate: event.data_termino.value,
+                    concluded: event.concluido.checked,
+                }).then(() => toast.success("Edição realizada com sucesso!"))
+                .catch(({ data }) => toast.error(data));
+            }
+            
         } else {
-            await axios.post("http://localhost:3030/api/events/create", {
-                name: event.nome.value,
-                location: event.localizacao.value,
-                startedDate: event.data_inicio.value,
-                endedDate: event.data_termino.value,
-                concluded: event.concluido.checked,
-            }).then(() => toast.success("Evento cadastrado com sucesso!"))
-            .catch(({ data }) => toast.error(data));
+            let banner = event.banner.files[0];
+            
+            if (banner) {
+
+              let data = new FormData();
+              data.append('name', event.nome.value);
+              data.append('location', event.localizacao.value);
+              data.append('startedDate', event.data_inicio.value);
+              data.append('endedDate', event.data_termino.value);
+              data.append('concluded', event.concluido.checked);
+              data.append('banner', banner);
+              await axios.post("http://localhost:3030/api/events/create", data)
+                .then(() => toast.success("Evento cadastrado com sucesso!"))
+                .catch(({ data }) => toast.error(data));
+
+            } else {
+                await axios.post("http://localhost:3030/api/events/create", {
+                    name: event.nome.value,
+                    location: event.localizacao.value,
+                    startedDate: event.data_inicio.value,
+                    endedDate: event.data_termino.value,
+                    concluded: event.concluido.checked,
+                }).then(() => toast.success("Evento cadastrado com sucesso!"))
+                .catch(({ data }) => toast.error(data));
+            }
         }
 
         event.nome.value = "";
@@ -168,6 +202,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         event.data_inicio.value = "";
         event.data_termino.value = "";
         event.concluido.checked = false;
+        event.banner.files = FileList[""];
 
         setOnEdit(null);
         toggleBoolean();
@@ -219,7 +254,8 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
                 </Button>
                 <Input 
                     type='file' 
-                    className='banner' 
+                    className='banner'
+                    name="banner"
                     accept="image/*" 
                     ref={hiddenFileInput} 
                     onChange={(event) => {

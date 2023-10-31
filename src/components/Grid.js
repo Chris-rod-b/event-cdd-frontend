@@ -28,7 +28,7 @@ const WrapperContent = styled.div`
     flex-basis: 20%;
   }
   &.col:nth-child(3) {
-    flex-basis: 30%;
+    flex-basis: 30%; // 35%
   }
   &.col:nth-child(4) {
     flex-basis: 5%;
@@ -107,6 +107,31 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
               <FaTrash onClick={() => handleDelete(item._id)} />
             </Fa>
           </WrapperContent>
+
+          {
+            // console.log(item.banner)
+            /* 
+              * .img trazer do banco; 
+              * add onHover para mostrar os Fa; 
+              * blur em caso de item.concluded = true 
+         
+          <WrapperContent className="col">
+
+            <ImageBanner />           // .img
+
+            <WrapperFa> 
+              <Fa className="fa">
+                <FaEdit onClick={() => handleEdit(item)} />
+              </Fa>
+              <Fa className="fa">
+                <FaTrash onClick={() => handleDelete(item._id)} />
+              </Fa>
+            </WrapperFa>
+            
+          </WrapperContent>
+          
+            */
+          }
         </EventContent>
       ))}
     </>

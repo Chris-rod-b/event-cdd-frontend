@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useEventContext } from "../context/EventContext";
+import logoCDD from "../assets/logoCDD.png";
 
 const HeaderContent = styled.div`
     background-color: #3c4fb2;
@@ -79,7 +80,7 @@ const Header = ({ events }) => {
             <Wrapper>
                 <Logo>
                     <Image 
-                        src="https://colodedeus.com.br/wp-content/uploads/2022/08/800px-ASSINATURA-LOGO-OFICIAL-1_LOGOTIPO.png" 
+                        src={logoCDD}
                         alt="Logo CDD"
                     />
                     <Label>
@@ -101,7 +102,7 @@ const Header = ({ events }) => {
                         <Counters>{events.filter(e => !e.concluded).length}</Counters><p>Eventos para acontecer</p>
                     </div>
                     <div>
-                        <Counters>{events.filter(e => e.concluded).length}</Counters><p>Eventos finzalidos</p>
+                        <Counters>{events.filter(e => e.concluded).length}</Counters><p>Eventos finalizados</p>
                     </div>
                 </CountersWrapper>
                 <Button onClick={toggleBoolean}>Novo evento</Button>
