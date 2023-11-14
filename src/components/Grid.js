@@ -25,20 +25,17 @@ const WrapperContent = styled.div`
     flex-basis: 45%;
   }
   &.col:nth-child(2) {
-    flex-basis: 20%;
+    flex-basis: 17%;
   }
   &.col:nth-child(3) {
-    flex-basis: 30%; // 35%
-  }
-  &.col:nth-child(4) {
-    flex-basis: 5%;
+    flex-basis: 38%; 
   }
 `;
 
 const Title = styled.div`
   font-size: 23px;
   font-weight: bold;
-
+  
   &.secondTitle {
     font-size: 14px;
     margin-bottom: 12px;
@@ -51,10 +48,64 @@ const SubTitle = styled.div`
 
 const Fa = styled.div`
   cursor: pointer;
-  &.fa:first-child {
+  filter: drop-shadow(0 0 4px #fff); 
+   &.fa:first-child {
     margin-bottom: 12px;
   }
 `;
+
+const WrapperFa = styled.div`
+  position: absolute;
+  margin-top: 35px;
+  width: 75px;
+  margin-left: 1164px;
+  padding-top: 35px;
+  padding-bottom: 35px;
+  opacity: 0;
+  transition: all .3s;
+  transform: translateY(-50%);
+  text-align: center;
+  
+  &:hover {
+    opacity: 1;
+  }
+`
+
+const TextSpan = styled.span`
+  opacity: 0;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  text-align: center;
+  
+  &:hover {
+    opacity: 1;
+  }
+`
+
+const ImageBanner = styled.img`
+  margin-top: -30px;
+  margin-bottom: -37px;
+  margin-right: -40px;
+  width: 530px;
+  height: 130px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  object-fit: cover;
+  object-position: 25% 25%;
+  clip-path: polygon(9% 0, 100% 0, 100% 100%, 0% 100%);
+  
+  &.concluded {
+    -webkit-transition: -webkit-filter 0.3s linear;
+    transition: -webkit-filter 0.3s linear;
+    &:hover {
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+    }
+  }
+`
 
 const Grid = ({ events, setEvents, setOnEdit }) => {
   
@@ -95,43 +146,26 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
           </WrapperContent>
 
           <WrapperContent className="col">
-            <Title className="secondTitle">CONCLUÍDO</Title>
-            <SubTitle>{item.concluded ? "Sim" : "Não"}</SubTitle>
-          </WrapperContent>
 
-          <WrapperContent className="col">
+            {// adicionar div com className com item.concluded, assim formar um CSS do TEXTO
+            }
+            <ImageBanner 
+              src={"http://localhost:3030/" + item.banner} 
+              className={
+                item.concluded ? "concluded" : ""
+              }
+            /> 
+            {//item.concluded && <TextSpan>EVENTO CONCLUIDO</TextSpan>  
+            }
+          </WrapperContent>
+          <WrapperFa> 
             <Fa className="fa">
               <FaEdit onClick={() => handleEdit(item)} />
             </Fa>
             <Fa className="fa">
               <FaTrash onClick={() => handleDelete(item._id)} />
             </Fa>
-          </WrapperContent>
-
-          {
-            // console.log(item.banner)
-            /* 
-              * .img trazer do banco; 
-              * add onHover para mostrar os Fa; 
-              * blur em caso de item.concluded = true 
-         
-          <WrapperContent className="col">
-
-            <ImageBanner />           // .img
-
-            <WrapperFa> 
-              <Fa className="fa">
-                <FaEdit onClick={() => handleEdit(item)} />
-              </Fa>
-              <Fa className="fa">
-                <FaTrash onClick={() => handleDelete(item._id)} />
-              </Fa>
-            </WrapperFa>
-            
-          </WrapperContent>
-          
-            */
-          }
+          </WrapperFa>
         </EventContent>
       ))}
     </>

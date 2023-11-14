@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaUpload } from "react-icons/fa";
 import axios from "axios";
 import calenderFormat from "../util/calenderFormat";
+import loadImageAsBlob from "../util/loadImageAsBlob";
 import { useEventContext } from "../context/EventContext";
 
 const FormContainer = styled.form`
@@ -110,22 +111,28 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
     
     const [dataInicio, setDataInicio] = useState('');
     const [dataTermino, setDataTermino] = useState('');
-    const [banner, setBanner] = useState(null);
+    const [banner, setBanner] = useState(null);   
     
     const { toggleBoolean } = useEventContext();
 
     useEffect(() => {
-        if (onEdit) {
+        const loadBanner = async () => {
+          if (onEdit) {
             const event = ref.current;
-
+      
             event.nome.value = onEdit.name;
             event.localizacao.value = onEdit.location;
             event.data_inicio.value = calenderFormat(onEdit.startedDate);
             event.data_termino.value = calenderFormat(onEdit.endedDate);
             event.concluido.checked = onEdit.concluded;
-            event.banner.files = onEdit.banner;
-        }
-    }, [onEdit]);
+      
+            const bannerBlob = await loadImageAsBlob("http://localhost:3030/" + onEdit.banner);
+            setBanner(bannerBlob);
+          }
+        };
+      
+        loadBanner();
+      }, [onEdit]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -202,14 +209,13 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         event.data_inicio.value = "";
         event.data_termino.value = "";
         event.concluido.checked = false;
-        event.banner.files = FileList[""];
 
         setOnEdit(null);
         toggleBoolean();
         getEvents();
     }
 
-    const handleUploadBanner = (e) => {
+    const handleUploadBanner = () => {
         hiddenFileInput.current.click(); 
     }
 
@@ -243,14 +249,18 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             </InputArea>
             <InputArea>
                 <Button type="button" className="banner" onClick={handleUploadBanner}>
+                    {console.log(banner)}
                     {
                         banner ?
-                            <ImagePreview src={URL.createObjectURL(banner)} alt={banner?.name} /> 
+                            <ImagePreview 
+                                name="banner" 
+                                src={URL.createObjectURL(banner)} 
+                            /> 
                         :
                             <>
                                 <FaUpload/> Carregue um banner
                             </>   
-                    } 
+                    }
                 </Button>
                 <Input 
                     type='file' 
