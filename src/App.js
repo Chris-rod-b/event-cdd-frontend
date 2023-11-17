@@ -52,18 +52,18 @@ function App() {
   return (
     <>
       <Container>
-        <Header events={events}/>
-          <Grouper>
-            {
-              booleanState && 
-                <Forms 
-                  onEdit={onEdit} 
-                  setOnEdit={setOnEdit} 
-                  getEvents={getEvents} 
-                />
-            }
-            <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
-          </Grouper>
+        <Header events={events} setOnEdit={setOnEdit}/>
+        <Grouper>
+          {
+            booleanState && 
+              <Forms 
+                onEdit={onEdit} 
+                setOnEdit={setOnEdit} 
+                getEvents={getEvents} 
+              />
+          }
+          <Grid events={events} setEvents={setEvents} setOnEdit={setOnEdit} />
+        </Grouper>
         <Footer>
           Copyright © 2023 – Comunidade Católica Colo de Deus | Todos os direitos reservados.
         </Footer>

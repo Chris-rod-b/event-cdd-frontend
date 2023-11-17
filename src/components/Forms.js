@@ -144,14 +144,14 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
 
         const event = ref.current;
 
-        let banner = event.banner.files[0];
+        let newBannerUpload = event.banner.files[0];
         
         if (
             !event.nome.value ||
             !event.localizacao.value ||
             !event.data_inicio.value ||
             !event.data_termino.value ||
-            !banner
+            (!banner && !newBannerUpload)
         ) {
             return toast.warn("Preencha todos os campos!");
         }
@@ -178,7 +178,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             data.append('startedDate', event.data_inicio.value);
             data.append('endedDate', event.data_termino.value);
             data.append('concluded', event.concluido.checked);
-            data.append('banner', banner);
+            data.append('banner', newBannerUpload);
             await axios.post("http://localhost:3030/api/events/create", data)
             .then(() => toast.success("Evento cadastrado com sucesso!"))
             .catch(({ data }) => toast.error(data));
@@ -200,6 +200,9 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         hiddenFileInput.current.click(); 
     }
 
+        // 1. Eventos de data única com horário de inicio
+        // 2. Escrever "EVENTO ENCERADO"
+    
     return (
         <FormContainer ref={ref} onSubmit={handleSubmit}>
             <InputArea>
@@ -256,11 +259,6 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             <Button type="submit">Salvar</Button>
         </FormContainer>
     );
-    {
-        // 2. Limpar form ao clicar no botão novo evento
-        // 4. Eventos de data única com horário de inicio
-        // 3. Escrever "EVENTO ENCERADO"
-    }
 };
 
 export default Form;

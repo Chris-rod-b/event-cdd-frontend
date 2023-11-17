@@ -71,7 +71,7 @@ const Button = styled.button`
     }
 `
 
-const Header = ({ events }) => {  
+const Header = ({ events, setOnEdit }) => {  
     
     const { toggleBoolean } = useEventContext();
 
@@ -105,7 +105,14 @@ const Header = ({ events }) => {
                         <Counters>{events.filter(e => e.concluded).length}</Counters><p>Eventos finalizados</p>
                     </div>
                 </CountersWrapper>
-                <Button onClick={toggleBoolean}>Novo evento</Button>
+                <Button onClick={
+                    () => {
+                        toggleBoolean();
+                        setOnEdit(null);
+                    }
+                }>
+                    Novo evento
+                </Button>
             </Wrapper>
         </HeaderContent>
     );
