@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import formatter from "../util/formatter";
 import { useEventContext } from "../context/EventContext";
+import Modal from './Modal';
 
 const EventContent = styled.div`
   width: 100%;
@@ -110,7 +111,12 @@ const ImageBanner = styled.img`
 const Grid = ({ events, setEvents, setOnEdit }) => {
   
   const { setBooleanState } = useEventContext();
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState(null);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   const handleEdit = (item) => {
     setOnEdit(item);
     setBooleanState(true);
@@ -163,11 +169,22 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
               <FaEdit onClick={() => handleEdit(item)} />
             </Fa>
             <Fa className="fa">
-              <FaTrash onClick={() => handleDelete(item._id)} />
+            <FaTrash onClick={() => {
+                openModal()
+                setDeletingItemId(item._id);
+              }} />
             </Fa>
           </WrapperFa>
         </EventContent>
       ))}
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={closeModal} 
+        onConfirm={() => {
+          handleDelete(deletingItemId);
+          closeModal();
+        }} 
+      />
     </>
   );
 };
