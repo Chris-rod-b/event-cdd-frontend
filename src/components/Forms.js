@@ -49,7 +49,7 @@ const Input = styled.input`
 
     width: 200px;
     padding: 0 10px;
-    border: 1px solid #bbb;
+    border: 1px solid ${({ error }) => (error ? 'red' : '#bbb')};
     border-radius: 5px;
     height: 40px;
 `;
@@ -75,7 +75,7 @@ const Button = styled.button`
         align-items: center;
         gap: 5px;
         background-color: transparent;
-        border: 1px solid #bbb;
+        border: 1px solid ${({ error }) => (error ? 'red' : '#bbb')};
         color: #8a898d;
         font-weight: lighter;
         max-width: 100%;
@@ -105,6 +105,37 @@ const ImagePreview = styled.img`
     background-size: 100%;
 `
 
+const Switch = styled.div`
+    width: 60px;
+    height: 30px;
+    background-color: #bbb;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 10px;
+
+    &.on {
+        transition: background-color 0.3s;
+        background-color: #f6bf0c;
+    }
+
+    .lever {
+        width: 30px;
+        height: 30px;
+        background-color: #f4f4f4;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        transition: transform 0.3s;
+    }
+
+    &.on .lever {
+        transform: translateX(30px);
+    }
+
+`;
+
 const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const ref = useRef();
     const hiddenFileInput = useRef(null);
@@ -113,13 +144,31 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const [dataTermino, setDataTermino] = useState('');
 
     const [previousFileName, setPreviousFileName] = useState('');
-    const [banner, setBanner] = useState(null);   
-    
+    const [banner, setBanner] = useState(null);
+
+    const [toggleSwitch, setToggleSwitch] = useState(false); 
+
+    const [errorFields, setErrorFields] = useState({
+        nome: false,
+        localizacao: false,
+        data_inicio: false,
+        data_termino: false,
+        banner: false,
+    });
+
     const { toggleBoolean } = useEventContext();
 
     useEffect(() => {
         const loadBanner = async () => {
             if (onEdit) {
+                setErrorFields({
+                    nome: false,
+                    localizacao: false,
+                    data_inicio: false,
+                    data_termino: false,
+                    banner: false,
+                });
+
                 const event = ref.current;
         
                 event.nome.value = onEdit.name;
@@ -145,43 +194,46 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         const event = ref.current;
 
         let newBannerUpload = event.banner.files[0];
-        
-        if (
-            !event.nome.value ||
-            !event.localizacao.value ||
-            !event.data_inicio.value ||
-            !event.data_termino.value ||
-            (!banner && !newBannerUpload)
-        ) {
-            return toast.warn("Preencha todos os campos!");
+
+        const requiredFields = ['nome', 'localizacao', 'data_inicio', 'data_termino', 'banner'];
+
+        const errors = {};
+
+        requiredFields.forEach((field) => {
+            if (!event[field].value) {
+                errors[field] = true;
+            }
+        });
+
+        if (banner || newBannerUpload) {
+            errors['banner'] = false;
         }
 
-        if (onEdit) {
-            
-            let data = new FormData();
-            data.append('name', event.nome.value);
-            data.append('location', event.localizacao.value);
-            data.append('startedDate', event.data_inicio.value);
-            data.append('endedDate', event.data_termino.value);
-            data.append('concluded', event.concluido.checked);
-            data.append('previousFileName', previousFileName);
-            data.append('banner', banner);
-            await axios.put("http://localhost:3030/api/events/" + onEdit._id, data)
-                .then(() => toast.success("Edição realizada com sucesso!"))
-                .catch(({ data }) => toast.error(data));
-            
-        } else {
+        setErrorFields(errors);
 
-            let data = new FormData();
-            data.append('name', event.nome.value);
-            data.append('location', event.localizacao.value);
-            data.append('startedDate', event.data_inicio.value);
-            data.append('endedDate', event.data_termino.value);
-            data.append('concluded', event.concluido.checked);
-            data.append('banner', newBannerUpload);
-            await axios.post("http://localhost:3030/api/events/create", data)
-            .then(() => toast.success("Evento cadastrado com sucesso!"))
-            .catch(({ data }) => toast.error(data));
+        if (Object.keys(errors).length > 0 && !onEdit) {
+            return toast.warn('Preencha os campos obrigatórios!');
+        }
+
+        let data = new FormData();
+        data.append('name', event.nome.value);
+        data.append('location', event.localizacao.value);
+        data.append('startedDate', event.data_inicio.value);
+        data.append('endedDate', event.data_termino.value);
+        data.append('concluded', event.concluido.checked);
+        data.append('previousFileName', previousFileName);
+        data.append('banner', onEdit ? banner : newBannerUpload);
+
+        if (onEdit) {
+            await axios
+                .put("http://localhost:3030/api/events/" + onEdit._id, data)
+                .then(() => toast.success("Alteração realizada com sucesso!"))
+                .catch(({ data }) => toast.error(data));
+        } else {
+            await axios
+                .post("http://localhost:3030/api/events/create", data)
+                .then(() => toast.success("Evento cadastrado com sucesso!"))
+                .catch(({ data }) => toast.error(data));
         }
 
         event.nome.value = "";
@@ -200,39 +252,48 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         hiddenFileInput.current.click(); 
     }
 
-        // 1. Eventos de data única com horário de inicio
-        // 2. Escrever "EVENTO ENCERADO"
+    const handleSwitchChange = () => {
+        setToggleSwitch(!toggleSwitch);
+    };
     
     return (
         <FormContainer ref={ref} onSubmit={handleSubmit}>
             <InputArea>
                 <Label>Nome do Evento</Label>
-                <Input name="nome" />
+                <Input className="nome" name="nome" error={errorFields.nome} />
             </InputArea>
             <InputArea>
                 <Label>Localização</Label>
-                <Input className="localizacao" name="localizacao" />
+                <Input className="localizacao" name="localizacao" error={errorFields.localizacao} />
             </InputArea>
             <InputArea>
                 <Label>Data de Início</Label>
-                <Input className="date" name="data_inicio" 
+                <Input className="date" name="data_inicio" error={errorFields.data_inicio}
                     type="date" onChange={(e) => setDataInicio(e.target.value)}
                     max={dataTermino}
                 />
             </InputArea>
             <InputArea>
                 <Label>Data de Término</Label>
-                <Input className="date" name="data_termino" 
+                <Input className="date" name="data_termino" error={errorFields.data_termino}
                     type="date" onChange={(e) => setDataTermino(e.target.value)}
                     min={dataInicio}     
                 />
             </InputArea>
+            { /* <InputArea>
+                <Label>Evento de data única ?</Label>
+                <Switch className={toggleSwitch ? 'on' : ''} onClick={handleSwitchChange}>
+                    <div className="lever"></div>
+                </Switch>
+            </InputArea>
+              */ }
             <InputArea>
                 <Label>Concluído</Label>
                 <Input className="checkbox" name="concluido" type="checkbox" />
             </InputArea>
             <InputArea>
-                <Button type="button" className="banner" onClick={handleUploadBanner}>
+                <Button type="button" className="banner" 
+                        onClick={handleUploadBanner} error={errorFields.banner}>
                     {
                         banner ?
                             <ImagePreview 

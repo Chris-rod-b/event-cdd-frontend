@@ -23,13 +23,13 @@ const WrapperContent = styled.div`
   flex: 1;
 
   &.col:nth-child(1) {
-    flex-basis: 45%;
+    flex-basis: 48%;
   }
   &.col:nth-child(2) {
-    flex-basis: 17%;
+    flex-basis: 20%;
   }
   &.col:nth-child(3) {
-    flex-basis: 38%; 
+    flex-basis: 32%; 
   }
 `;
 
@@ -130,11 +130,11 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
          const newArray = events.filter((event) => event._id !== id);
 
         setEvents(newArray);
+        setOnEdit(null);
+        setBooleanState(false);
         toast.success("Evento excluído com sucesso!");
       })
       .catch(({ data }) => toast.error(data));
-
-    setOnEdit(null);
   };
   
   return (
@@ -153,7 +153,9 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
 
           <WrapperContent className="col">
 
-            {// adicionar div com className com item.concluded, assim formar um CSS do TEXTO
+            {
+              // 1. Escrever "EVENTO ENCERADO"
+              // adicionar div com className com item.concluded, assim formar um CSS do TEXTO
             }
             <ImageBanner 
               src={"http://localhost:3030/" + item.banner} 
