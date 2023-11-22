@@ -105,7 +105,7 @@ const ImagePreview = styled.img`
     background-size: 100%;
 `
 
-const Switch = styled.div`
+/* const Switch = styled.div`
     width: 60px;
     height: 30px;
     background-color: #bbb;
@@ -134,7 +134,7 @@ const Switch = styled.div`
         transform: translateX(30px);
     }
 
-`;
+`; */
 
 const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const ref = useRef();
@@ -146,7 +146,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
     const [previousFileName, setPreviousFileName] = useState('');
     const [banner, setBanner] = useState(null);
 
-    const [toggleSwitch, setToggleSwitch] = useState(false); 
+    //const [toggleSwitch, setToggleSwitch] = useState(false); 
 
     const [errorFields, setErrorFields] = useState({
         nome: false,
@@ -258,9 +258,10 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         hiddenFileInput.current.click(); 
     }
 
-    const handleSwitchChange = () => {
+    /* const handleSwitchChange = () => {
         setToggleSwitch(!toggleSwitch);
     };
+    */
     
     return (
         <FormContainer ref={ref} onSubmit={handleSubmit}>
@@ -286,6 +287,13 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
                     min={dataInicio}     
                 />
             </InputArea>
+            { /* <InputArea>
+                <Label>Evento de data única ?</Label>
+                <Switch className={toggleSwitch ? 'on' : ''} onClick={handleSwitchChange}>
+                    <div className="lever"></div>
+                </Switch>
+            </InputArea>
+              */ }
             <InputArea>
                 <Label>Concluído</Label>
                 <Input className="checkbox" name="concluido" type="checkbox" />
