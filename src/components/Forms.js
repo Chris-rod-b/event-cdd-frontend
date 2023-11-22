@@ -193,9 +193,9 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
 
         const event = ref.current;
 
-        let newBannerUpload = event.banner.files[0];
+        const newBannerUpload = event.banner.files[0];
 
-        const requiredFields = ['nome', 'localizacao', 'data_inicio', 'data_termino', 'banner'];
+        const requiredFields = ['nome', 'localizacao', 'data_inicio', 'data_termino'];
 
         const errors = {};
 
@@ -204,14 +204,16 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
                 errors[field] = true;
             }
         });
-
-        if (banner || newBannerUpload) {
+    
+        if (!banner && !newBannerUpload) {
+            errors['banner'] = true;
+        } else {
             errors['banner'] = false;
         }
 
         setErrorFields(errors);
 
-        if (Object.keys(errors).length > 0 && !onEdit) {
+        if (Object.values(errors).some((error) => error)) {
             return toast.warn('Preencha os campos obrigatórios!');
         }
 
@@ -224,16 +226,20 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
         data.append('previousFileName', previousFileName);
         data.append('banner', onEdit ? banner : newBannerUpload);
 
-        if (onEdit) {
-            await axios
-                .put("http://localhost:3030/api/events/" + onEdit._id, data)
-                .then(() => toast.success("Alteração realizada com sucesso!"))
-                .catch(({ data }) => toast.error(data));
-        } else {
-            await axios
-                .post("http://localhost:3030/api/events/create", data)
-                .then(() => toast.success("Evento cadastrado com sucesso!"))
-                .catch(({ data }) => toast.error(data));
+        try {
+            if (onEdit) {
+                await axios
+                    .put("http://localhost:3030/api/events/" + onEdit._id, data)
+                    .then(() => toast.success("Alteração realizada com sucesso!"))
+                    .catch(({ data }) => toast.error(data));
+            } else {
+                await axios
+                    .post("http://localhost:3030/api/events/create", data)
+                    .then(() => toast.success("Evento cadastrado com sucesso!"))
+                    .catch(({ data }) => toast.error(data));
+            }
+        } catch (e) {
+            toast.error(e.response?.data || "Erro ao salvar o evento.");
         }
 
         event.nome.value = "";
@@ -280,13 +286,6 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
                     min={dataInicio}     
                 />
             </InputArea>
-            { /* <InputArea>
-                <Label>Evento de data única ?</Label>
-                <Switch className={toggleSwitch ? 'on' : ''} onClick={handleSwitchChange}>
-                    <div className="lever"></div>
-                </Switch>
-            </InputArea>
-              */ }
             <InputArea>
                 <Label>Concluído</Label>
                 <Input className="checkbox" name="concluido" type="checkbox" />
@@ -294,8 +293,7 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
             <InputArea>
                 <Button type="button" className="banner" 
                         onClick={handleUploadBanner} error={errorFields.banner}>
-                    {
-                        banner ?
+                    { banner ?
                             <ImagePreview 
                                 name="banner" 
                                 src={URL.createObjectURL(banner)} 
@@ -303,15 +301,10 @@ const Form = ({ getEvents, onEdit, setOnEdit }) => {
                         :
                             <>
                                 <FaUpload/> Carregue um banner
-                            </>   
-                    }
+                            </>   }
                 </Button>
                 <Input 
-                    type='file' 
-                    className='banner'
-                    name="banner"
-                    accept="image/*" 
-                    ref={hiddenFileInput} 
+                    type='file' className='banner' name="banner" accept="image/*" ref={hiddenFileInput} 
                     onChange={(event) => {
                         setBanner(event.target.files[0]);
                     }}
