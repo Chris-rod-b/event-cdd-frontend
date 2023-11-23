@@ -73,17 +73,14 @@ const WrapperFa = styled.div`
 `
 
 const TextSpan = styled.span`
+  position: absolute;
+  transition: opacity 0.3s linear;
   opacity: 0;
-  -webkit-transition: all .3s;
-  transition: all .3s;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
-  text-align: center;
-  
-  &:hover {
-    opacity: 1;
-  }
+  left: 67%;
+  margin-top: 50px;
+  font-weight: bold;
+  font-size: x-large;
+  filter: drop-shadow(0 0 4px #fff); 
 `
 
 const ImageBanner = styled.img`
@@ -97,15 +94,30 @@ const ImageBanner = styled.img`
   object-fit: cover;
   object-position: 25% 25%;
   clip-path: polygon(9% 0, 100% 0, 100% 100%, 0% 100%);
-  
+  transition: filter 0.3s linear;
+
   &.concluded {
-    -webkit-transition: -webkit-filter 0.3s linear;
-    transition: -webkit-filter 0.3s linear;
-    &:hover {
+    margin: 0;
+  }
+`
+
+const EventConcluded = styled.div`
+  margin-top: -30px;
+  margin-bottom: -30px;
+  margin-right: -40px;
+  width: 530px;
+  height: 130px;
+  clip-path: polygon(9% 0, 100% 0, 100% 100%, 0% 100%);
+
+  &:hover {
+    ${ImageBanner} {    
       filter: blur(8px);
-      -webkit-filter: blur(8px);
+    }
+    ${TextSpan} {
+      opacity: 1;
     }
   }
+
 `
 
 const Grid = ({ events, setEvents, setOnEdit }) => {
@@ -153,17 +165,15 @@ const Grid = ({ events, setEvents, setOnEdit }) => {
 
           <WrapperContent className="col">
 
-            {
-              // 1. Escrever "EVENTO ENCERADO"
-              // adicionar div com className com item.concluded, assim formar um CSS do TEXTO
-            }
-            <ImageBanner 
-              src={"http://localhost:3030/" + item.banner} 
-              className={
-                item.concluded ? "concluded" : ""
-              }
-            /> 
-            {//item.concluded && <TextSpan>EVENTO CONCLUIDO</TextSpan>  
+            { item.concluded ? (
+                <EventConcluded>
+                  <ImageBanner className="concluded" src={"http://localhost:3030/" + item.banner} /> 
+                  <TextSpan>EVENTO CONCLUÍDO</TextSpan>
+                </EventConcluded> 
+              ) :
+              (
+                <ImageBanner src={"http://localhost:3030/" + item.banner} /> 
+              )
             }
           </WrapperContent>
           <WrapperFa> 
